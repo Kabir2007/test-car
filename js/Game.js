@@ -29,15 +29,12 @@ class Game {
       form.display();
     }
 
-    car1 = createSprite(100,200);
+    car1 = createSprite(300,200);
     car1.addImage("car1",car1_img);
-    car2 = createSprite(300,200);
+    car2 = createSprite(500,200);
     car2.addImage("car2",car2_img);
-    car3 = createSprite(500,200);
-    car3.addImage("car3",car3_img);
-    car4 = createSprite(700,200);
-    car4.addImage("car4",car4_img);
-    cars = [car1, car2, car3, car4];
+    cars = [car1, car2];
+
   }
 
   play(){
@@ -56,17 +53,24 @@ class Game {
       var index = 0;
 
       //x and y position of the cars
-      var x = 175 ;
+      var x = 375 ;
       var y;
+
+      
 
       for(var plr in allPlayers){
         //add 1 to the index for every loop
         index = index + 1 ;
 
         //position the cars a little away from each other in x direction
-        x = x + 200;
+      
         //use data form the database to display the cars in y direction
         y = displayHeight - allPlayers[plr].distance;
+
+        x = allPlayers[plr].Xposition;
+
+        x = 200 + x + (index*400)
+
         cars[index-1].x = x;
         cars[index-1].y = y;
        // console.log(index, player.index)
@@ -89,14 +93,35 @@ class Game {
 
     if(keyIsDown(UP_ARROW) && player.index !== null){
       player.distance +=10
+
       player.update();
     }
 
-    if(player.distance > 3860){
+    if(keyIsDown(DOWN_ARROW) && player.index !== null){
+      player.distance -=10
+      player.update();
+    }
+
+    if(keyIsDown(RIGHT_ARROW) && player.index !== null){
+      player.Xposition += 3;
+      player.update();
+      player.x += 10
+    }
+
+    if(keyIsDown(LEFT_ARROW) && player.index !== null){
+      player.Xposition -= 3;
+      player.update();
+      player.x -= 10
+
+     } 
+
+    if(player.distance > 3650){
       gameState = 2;
       player.rank +=1
       Player.updateCarsAtEnd(player.rank)
     }
+
+    car1.bounceOff(car2);
    
     drawSprites();
   }
